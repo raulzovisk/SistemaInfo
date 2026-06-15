@@ -8,7 +8,8 @@ Add-Type -AssemblyName System.Drawing
 # Carregar assinaturas Win32 P/Invoke
 try {
     [Win32Functions.Win32] | Out-Null
-} catch {
+}
+catch {
     $Signature = @"
     [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
     [DllImport("user32.dll")] public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr w, IntPtr l);
@@ -37,7 +38,8 @@ function Capture-Screen ($rect) {
         $height = $rect.Bottom - $rect.Top
         $left = $rect.Left
         $top = $rect.Top
-    } else {
+    }
+    else {
         $screen = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
         $width = $screen.Width
         $height = $screen.Height
@@ -95,7 +97,8 @@ function Wait-Stable ($hwnd = [IntPtr]::Zero, $interval = 0.8, $confirm = 3, $ti
                 Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Tela estabilizou apos $($diff.ToString('F1'))s." -ForegroundColor Gray
                 return
             }
-        } else {
+        }
+        else {
             $equals = 0
         }
         $prev = $h
@@ -129,7 +132,8 @@ function Wait-Window ($titles, $timeoutSec = 60) {
                         return $proc.MainWindowHandle
                     }
                 }
-            } catch {}
+            }
+            catch {}
         }
         Start-Sleep -Milliseconds 500
     }
@@ -230,7 +234,8 @@ function Task-ProgramasRecursos {
         Start-Sleep -Milliseconds 500
         [System.Windows.Forms.SendKeys]::SendWait("^+5")
         Start-Sleep -Milliseconds 1000
-    } catch {}
+    }
+    catch {}
     
     Take-Screenshot "PROGRAMAS"
     Close-Window $hwnd
@@ -261,10 +266,10 @@ function Task-Bitlocker {
         $keys = $vol.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' }
         foreach ($k in $keys) {
             $entries += [PSCustomObject]@{
-                Drive = $vol.MountPoint
-                Status = $vol.VolumeStatus
-                Protection = $vol.ProtectionStatus
-                KeyId = $k.KeyProtectorId
+                Drive       = $vol.MountPoint
+                Status      = $vol.VolumeStatus
+                Protection  = $vol.ProtectionStatus
+                KeyId       = $k.KeyProtectorId
                 RecoveryKey = $k.RecoveryPassword
             }
         }
@@ -299,7 +304,8 @@ function Generate-BitlockerPdf ($pdfPath, $entries) {
                 $formattedKey += $d.Substring($i * 6, 6)
             }
             $recoveryKey = $formattedKey -join "-"
-        } else {
+        }
+        else {
             $recoveryKey = $e.RecoveryKey
         }
         
@@ -424,8 +430,10 @@ function Show-Menu {
             for ($i = 1; $i -le $Itens.Count; $i++) {
                 $selecionados += $i
             }
-        } else {
+        }
+        else {
             $partes = $entrada.Split(',', [System.StringSplitOptions]::RemoveEmptyEntries)
+            $val = 0
             foreach ($p in $partes) {
                 if ([int]::TryParse($p.Trim(), [ref]$val)) {
                     if ($val -ge 1 -and $val -le $Itens.Count) {
@@ -455,7 +463,8 @@ function Show-Menu {
             try {
                 Write-Host "`n  ── [$idx] $($Itens[$idx - 1].Label) ──" -ForegroundColor Cyan
                 & $Itens[$idx - 1].Acao
-            } catch {
+            }
+            catch {
                 Write-Host "ERRO na tarefa [$idx]: $_" -ForegroundColor Red
             }
         }
