@@ -433,9 +433,10 @@ function Show-Menu {
         }
         else {
             $partes = $entrada.Split(',', [System.StringSplitOptions]::RemoveEmptyEntries)
-            $val = 0
             foreach ($p in $partes) {
-                if ([int]::TryParse($p.Trim(), [ref]$val)) {
+                $p = $p.Trim()
+                if ($p -match '^\d+$') {
+                    $val = [int]$p
                     if ($val -ge 1 -and $val -le $Itens.Count) {
                         $selecionados += $val
                     }
