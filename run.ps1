@@ -11,12 +11,19 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 try {
-    Write-Host "Baixando o aplicativo do GitHub..." -ForegroundColor Yellow
+    Write-Host "Baixando o aplicativo do GitHub (aguarde)..." -ForegroundColor Yellow
+    # Desativa a barra de progresso lenta do PowerShell
+    $oldProgressPreference = $ProgressPreference
+    $ProgressPreference = 'SilentlyContinue'
+    
     Invoke-WebRequest -Uri $repoUrl -OutFile $tempExe -UseBasicParsing
+    
+    # Restaura a configuração original
+    $ProgressPreference = $oldProgressPreference
 }
 catch {
     Write-Host "Erro ao baixar o executável." -ForegroundColor Red
-    Write-Host "Verifique se você alterou SEU_USUARIO no script run.ps1 e se o arquivo SistemaInfo.exe foi publicado nas Releases do GitHub." -ForegroundColor Red
+    Write-Host "Verifique se o arquivo SistemaInfo.exe foi publicado nas Releases do seu GitHub." -ForegroundColor Red
     Write-Host ""
     Read-Host "Pressione ENTER para fechar"
     exit
