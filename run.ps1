@@ -47,7 +47,7 @@ function Capture-Screen ($rect) {
         $top = $screen.Y
     }
     
-    $bmp = New-Object System.Drawing.Bitmap $width, $height, 'Format32bppArgb'
+    $bmp = New-Object System.Drawing.Bitmap $width, $height, ([System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
     $g = [System.Drawing.Graphics]::FromImage($bmp)
     $g.CopyFromScreen($left, $top, 0, 0, $bmp.Size)
     $g.Dispose()
